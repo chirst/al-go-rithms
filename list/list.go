@@ -14,9 +14,12 @@ type node struct {
 }
 
 // New returns an instance of a list
-func New() *linkList {
-	// TODO create a list by passing in values
-	return &linkList{}
+func New(vs ...int) *linkList {
+	l := &linkList{}
+	for v := range vs {
+		l.Append(v)
+	}
+	return l
 }
 
 // Len returns the count of elements in the list

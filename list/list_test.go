@@ -4,6 +4,13 @@ import (
 	"testing"
 )
 
+func TestNew(t *testing.T) {
+	l := New(1, 2, 3)
+	if l.Len() != 3 {
+		t.Fatalf("expected new to generate 3 values")
+	}
+}
+
 func TestLen(t *testing.T) {
 
 	t.Run("prepend", func(t *testing.T) {
