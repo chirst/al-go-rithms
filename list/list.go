@@ -14,9 +14,9 @@ type node struct {
 }
 
 // New returns an instance of a list
-func New(vs ...int) *linkList {
+func New(values ...int) *linkList {
 	l := &linkList{}
-	for v := range vs {
+	for v := range values {
 		l.Append(v)
 	}
 	return l
