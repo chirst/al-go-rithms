@@ -104,6 +104,45 @@ func TestPrepend(t *testing.T) {
 	checkNodeNext(t, l, 2, nil)
 }
 
+func TestInsert(t *testing.T) {
+
+	t.Run("insert lower", func(t *testing.T) {
+		l := New(1, 2, 3)
+		l.Insert(0, 4)
+		checkNodeValue(t, l, 0, 4)
+		checkNodeValue(t, l, 1, 1)
+		checkNodeValue(t, l, 2, 2)
+		checkNodeValue(t, l, 3, 3)
+	})
+
+	t.Run("insert middle lower", func(t *testing.T) {
+		l := New(1, 2, 3)
+		l.Insert(1, 4)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 4)
+		checkNodeValue(t, l, 2, 2)
+		checkNodeValue(t, l, 3, 3)
+	})
+
+	t.Run("insert middle upper", func(t *testing.T) {
+		l := New(1, 2, 3)
+		l.Insert(2, 4)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 2)
+		checkNodeValue(t, l, 2, 4)
+		checkNodeValue(t, l, 3, 3)
+	})
+
+	t.Run("insert upper", func(t *testing.T) {
+		l := New(1, 2, 3)
+		l.Insert(3, 4)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 2)
+		checkNodeValue(t, l, 2, 3)
+		checkNodeValue(t, l, 3, 4)
+	})
+}
+
 func TestAppend(t *testing.T) {
 	l := New()
 
@@ -144,6 +183,33 @@ func TestShift(t *testing.T) {
 	checkNodeNil(t, l, 2)
 }
 
+func TestRemove(t *testing.T) {
+
+	t.Run("remove lower", func(t *testing.T) {
+		l := New(1, 2, 3)
+		l.Remove(0)
+		checkNodeValue(t, l, 0, 2)
+		checkNodeValue(t, l, 1, 3)
+		checkNodeNil(t, l, 2)
+	})
+
+	t.Run("remove middle", func(t *testing.T) {
+		l := New(1, 2, 3)
+		l.Remove(1)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 3)
+		checkNodeNil(t, l, 2)
+	})
+
+	t.Run("remove upper", func(t *testing.T) {
+		l := New(1, 2, 3)
+		l.Remove(2)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 2)
+		checkNodeNil(t, l, 2)
+	})
+}
+
 func TestPop(t *testing.T) {
 	l := New(1, 2, 3)
 
@@ -161,6 +227,49 @@ func TestPop(t *testing.T) {
 	checkNodeNil(t, l, 0)
 	checkNodeNil(t, l, 1)
 	checkNodeNil(t, l, 2)
+}
+
+func TestSwap(t *testing.T) {
+
+	t.Run("ends", func(*testing.T) {
+		l := New(1, 2, 3)
+		l.Swap(0, 2)
+		checkNodeValue(t, l, 0, 3)
+		checkNodeValue(t, l, 1, 2)
+		checkNodeValue(t, l, 2, 1)
+	})
+
+	t.Run("adjacent lower", func(*testing.T) {
+		l := New(1, 2, 3)
+		l.Swap(0, 1)
+		checkNodeValue(t, l, 0, 2)
+		checkNodeValue(t, l, 1, 1)
+		checkNodeValue(t, l, 2, 3)
+	})
+
+	t.Run("adjacent upper", func(*testing.T) {
+		l := New(1, 2, 3)
+		l.Swap(1, 2)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 3)
+		checkNodeValue(t, l, 2, 2)
+	})
+
+	t.Run("self", func(*testing.T) {
+		l := New(1, 2, 3)
+		l.Swap(2, 2)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 2)
+		checkNodeValue(t, l, 2, 3)
+	})
+
+	t.Run("out of bounds", func(*testing.T) {
+		l := New(1, 2, 3)
+		l.Swap(2, 3)
+		checkNodeValue(t, l, 0, 1)
+		checkNodeValue(t, l, 1, 2)
+		checkNodeValue(t, l, 2, 3)
+	})
 }
 
 func checkNodeValue(t *testing.T, l *linkList, nodeIndex int, wantValue int) {
