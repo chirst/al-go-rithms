@@ -16,7 +16,7 @@ type node struct {
 // New returns an instance of a list
 func New(values ...int) *linkList {
 	l := &linkList{}
-	for v := range values {
+	for _, v := range values {
 		l.Append(v)
 	}
 	return l

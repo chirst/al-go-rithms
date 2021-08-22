@@ -6,6 +6,19 @@ import (
 
 func TestNew(t *testing.T) {
 	l := New(1, 2, 3)
+
+	checkNodeValue(t, l, 0, 1)
+	checkNodePrev(t, l, 0, nil)
+	checkNodeNext(t, l, 0, l.getNode(1))
+
+	checkNodeValue(t, l, 1, 2)
+	checkNodePrev(t, l, 1, l.getNode(0))
+	checkNodeNext(t, l, 1, l.getNode(2))
+
+	checkNodeValue(t, l, 2, 3)
+	checkNodePrev(t, l, 2, l.getNode(1))
+	checkNodeNext(t, l, 2, nil)
+
 	checkLen(t, l, 3)
 }
 
@@ -113,11 +126,7 @@ func TestAppend(t *testing.T) {
 }
 
 func TestShift(t *testing.T) {
-	l := New()
-
-	l.Append(1)
-	l.Append(2)
-	l.Append(3)
+	l := New(1, 2, 3)
 
 	l.Shift()
 	checkNodeValue(t, l, 0, 2)
@@ -136,11 +145,7 @@ func TestShift(t *testing.T) {
 }
 
 func TestPop(t *testing.T) {
-	l := New()
-
-	l.Append(1)
-	l.Append(2)
-	l.Append(3)
+	l := New(1, 2, 3)
 
 	l.Pop()
 	checkNodeValue(t, l, 0, 1)
