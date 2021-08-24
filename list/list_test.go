@@ -167,27 +167,34 @@ func TestAppend(t *testing.T) {
 func TestShift(t *testing.T) {
 	l := New(1, 2, 3)
 
-	l.Shift()
+	r := l.Shift()
+	checkEqual(t, r, 1)
 	checkNodeValue(t, l, 0, 2)
 	checkNodeValue(t, l, 1, 3)
 	checkNodeNil(t, l, 2)
 
-	l.Shift()
+	r = l.Shift()
+	checkEqual(t, r, 2)
 	checkNodeValue(t, l, 0, 3)
 	checkNodeNil(t, l, 1)
 	checkNodeNil(t, l, 2)
 
-	l.Shift()
+	r = l.Shift()
+	checkEqual(t, r, 3)
 	checkNodeNil(t, l, 0)
 	checkNodeNil(t, l, 1)
 	checkNodeNil(t, l, 2)
+
+	r = l.Shift()
+	checkNil(t, r)
 }
 
 func TestRemove(t *testing.T) {
 
 	t.Run("remove lower", func(t *testing.T) {
 		l := New(1, 2, 3)
-		l.Remove(0)
+		r := l.Remove(0)
+		checkEqual(t, r, 1)
 		checkNodeValue(t, l, 0, 2)
 		checkNodeValue(t, l, 1, 3)
 		checkNodeNil(t, l, 2)
@@ -195,7 +202,8 @@ func TestRemove(t *testing.T) {
 
 	t.Run("remove middle", func(t *testing.T) {
 		l := New(1, 2, 3)
-		l.Remove(1)
+		r := l.Remove(1)
+		checkEqual(t, r, 2)
 		checkNodeValue(t, l, 0, 1)
 		checkNodeValue(t, l, 1, 3)
 		checkNodeNil(t, l, 2)
@@ -203,30 +211,43 @@ func TestRemove(t *testing.T) {
 
 	t.Run("remove upper", func(t *testing.T) {
 		l := New(1, 2, 3)
-		l.Remove(2)
+		r := l.Remove(2)
+		checkEqual(t, r, 3)
 		checkNodeValue(t, l, 0, 1)
 		checkNodeValue(t, l, 1, 2)
 		checkNodeNil(t, l, 2)
+	})
+
+	t.Run("remove out of bounds", func(t *testing.T) {
+		l := New(1, 2, 3)
+		r := l.Remove(7)
+		checkNil(t, r)
 	})
 }
 
 func TestPop(t *testing.T) {
 	l := New(1, 2, 3)
 
-	l.Pop()
+	r := l.Pop()
+	checkEqual(t, r, 3)
 	checkNodeValue(t, l, 0, 1)
 	checkNodeValue(t, l, 1, 2)
 	checkNodeNil(t, l, 2)
 
-	l.Pop()
+	r = l.Pop()
+	checkEqual(t, r, 2)
 	checkNodeValue(t, l, 0, 1)
 	checkNodeNil(t, l, 1)
 	checkNodeNil(t, l, 2)
 
-	l.Pop()
+	r = l.Pop()
+	checkEqual(t, r, 1)
 	checkNodeNil(t, l, 0)
 	checkNodeNil(t, l, 1)
 	checkNodeNil(t, l, 2)
+
+	r = l.Pop()
+	checkNil(t, r)
 }
 
 func TestSwap(t *testing.T) {
@@ -270,6 +291,16 @@ func TestSwap(t *testing.T) {
 		checkNodeValue(t, l, 1, 2)
 		checkNodeValue(t, l, 2, 3)
 	})
+}
+
+func TestGet(t *testing.T) {
+	l := New(1, 2, 3)
+	r := l.Get(0)
+	checkEqual(t, r, 1)
+	r = l.Get(1)
+	checkEqual(t, r, 2)
+	r = l.Get(2)
+	checkEqual(t, r, 3)
 }
 
 func checkNodeValue(t *testing.T, l *linkList, nodeIndex int, wantValue int) {
@@ -321,6 +352,18 @@ func checkNodeNil(t *testing.T, l *linkList, nodeIndex int) {
 	n := l.getNode(nodeIndex)
 	if n != nil {
 		t.Errorf("expected node at index: %v to be nil", nodeIndex)
+	}
+}
+
+func checkEqual(t *testing.T, a *int, b int) {
+	if *a != b {
+		t.Errorf("expected %v to be equal to %b", a, b)
+	}
+}
+
+func checkNil(t *testing.T, v *int) {
+	if v != nil {
+		t.Errorf("expected %v to be nil", v)
 	}
 }
 

@@ -112,34 +112,38 @@ func (ll *linkList) Append(value int) {
 
 // Shift removes the first element in the list.
 //
+// Returns the value of the removed element or nil if the list is empty.
+//
 // The complexity is O(1).
-func (ll *linkList) Shift() {
+func (ll *linkList) Shift() *int {
 	if ll.head == nil {
-		return
+		return nil
 	}
 	ll.len--
+	ret := ll.head.value
 	if ll.head.next == nil {
 		ll.head = nil
 		ll.tail = nil
-		return
+		return &ret
 	}
 	ll.head = ll.head.next
 	ll.head.prev = nil
+	return &ret
 }
 
 // Remove removes an element for a zero based index.
 //
 // Given the index is not in the set of indexes no item will be removed.
 //
+// Returns the value of the removed element or nil if nothing is removed.
+//
 // The complexity is O(n).
-func (ll *linkList) Remove(index int) {
+func (ll *linkList) Remove(index int) *int {
 	if index == 0 {
-		ll.Shift()
-		return
+		return ll.Shift()
 	}
 	if index == ll.Len()-1 {
-		ll.Pop()
-		return
+		return ll.Pop()
 	}
 
 	currentNode := ll.head
@@ -150,28 +154,33 @@ func (ll *linkList) Remove(index int) {
 			nextNode := currentNode.next
 			prevNode.next = nextNode
 			nextNode.prev = prevNode
-			return
+			return &currentNode.value
 		}
 		currentNode = currentNode.next
 		currentIndex++
 	}
+	return nil
 }
 
 // Pop removes the last element in the list.
 //
+// Returns the value of the removed element or nil if the list is empty.
+//
 // The complexity is O(1).
-func (ll *linkList) Pop() {
+func (ll *linkList) Pop() *int {
 	if ll.head == nil {
-		return
+		return nil
 	}
 	ll.len--
+	ret := ll.tail.value
 	if ll.head.next == nil {
 		ll.head = nil
 		ll.tail = nil
-		return
+		return &ret
 	}
 	ll.tail = ll.tail.prev
 	ll.tail.next = nil
+	return &ret
 }
 
 // Swap swaps two elements in the list for two zero based indexes.
@@ -202,4 +211,19 @@ func (ll *linkList) Swap(indexA, indexB int) {
 	if nodeA != nil && nodeB != nil {
 		nodeA.value, nodeB.value = nodeB.value, nodeA.value
 	}
+}
+
+// Get returns the value of an element in the list for a zero based index. If no
+// element matches the given index, nil is returned.
+func (ll *linkList) Get(index int) *int {
+	count := 0
+	currentNode := ll.head
+	for currentNode != nil {
+		if count == index {
+			return &currentNode.value
+		}
+		count++
+		currentNode = currentNode.next
+	}
+	return nil
 }
