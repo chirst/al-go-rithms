@@ -215,6 +215,8 @@ func (ll *linkList) Swap(indexA, indexB int) {
 
 // Get returns the value of an element in the list for a zero based index. If no
 // element matches the given index, nil is returned.
+//
+// The complexity is O(n)
 func (ll *linkList) Get(index int) *int {
 	count := 0
 	currentNode := ll.head
