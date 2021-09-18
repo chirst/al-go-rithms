@@ -39,11 +39,14 @@ func (bt *btree) Insert(value int) {
 		}
 		return
 	}
+	// Root node exists, attempt insert.
 	bt.insert(bt.root, value)
 }
 
+// insert recursively follows node children until hitting a leaf node. Once a
+// leaf is hit an insert will be performed followed by splitting.
 func (bt *btree) insert(n *node, value int) {
-	// Insert at leaf.
+	// Insert if leaf.
 	if len(n.children) == 0 {
 		n.elements = append(n.elements, value)
 		// Start splitting if needed.
@@ -64,6 +67,8 @@ func (bt *btree) insert(n *node, value int) {
 	}
 }
 
+// split splits nodes exceeding the trees degree. split continues to recursively
+// process parent trees until all parent nodes have valid degrees.
 func (bt *btree) split(n *node) {
 	// Base case, done splitting.
 	if len(n.elements) < bt.degree {
@@ -165,5 +170,6 @@ func (bt *btree) split(n *node) {
 				n.parent.children = append(leftParentChildren, rightParentChildren...)
 			}
 		}
+		bt.split(n.parent)
 	}
 }
