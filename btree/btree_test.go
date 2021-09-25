@@ -86,6 +86,8 @@ func TestInsert(t *testing.T) {
 	})
 }
 
+// TODO: test degrees
+
 // checkElements asserts nodes elements matches exactly the values for elements.
 // order does matter.
 func (n *node) checkElements(t *testing.T, elements ...int) {
