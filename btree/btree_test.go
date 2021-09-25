@@ -63,9 +63,12 @@ func TestInsert(t *testing.T) {
 
 	t.Run("insert 7", func(t *testing.T) {
 		bt.Insert(7)
+
+		// check top level (root)
 		bt.root.checkElements(t, 4)
 		bt.root.checkChildrenLength(t, 2)
 
+		// check second level
 		bt.root.children[0].checkElements(t, 2)
 		bt.root.children[0].checkChildrenLength(t, 2)
 		bt.root.children[0].children[0].checkElements(t, 1)
@@ -73,6 +76,7 @@ func TestInsert(t *testing.T) {
 		bt.root.children[0].children[1].checkElements(t, 3)
 		bt.root.children[0].children[1].checkChildrenLength(t, 0)
 
+		// check third level (leafs)
 		bt.root.children[1].checkElements(t, 6)
 		bt.root.children[1].checkChildrenLength(t, 2)
 		bt.root.children[1].children[0].checkElements(t, 5)

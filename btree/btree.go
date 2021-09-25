@@ -77,26 +77,30 @@ func (bt *btree) split(n *node) {
 
 	// `n` is the root node.
 	if n.parent == nil {
-		middleIndex := len(n.elements) / 2
+		middleIndex := (len(n.elements) - 1) / 2
 		value := n.elements[middleIndex]
 		lefts := n.elements[:middleIndex]
 		rights := n.elements[middleIndex+1:]
+		leftChildren := []*node{}
+		rightChildren := []*node{}
+		if len(n.children) != 0 {
+			leftChildren = n.children[:middleIndex+1]
+			rightChildren = n.children[middleIndex+1:]
+		}
 
 		bt.root = &node{
 			elements: []int{value},
 		}
-		for _, l := range lefts {
-			bt.root.children = append(bt.root.children, &node{
-				parent:   bt.root,
-				elements: []int{l},
-			})
-		}
-		for _, r := range rights {
-			bt.root.children = append(bt.root.children, &node{
-				parent:   bt.root,
-				elements: []int{r},
-			})
-		}
+		bt.root.children = append(bt.root.children, &node{
+			parent:   bt.root,
+			elements: lefts,
+			children: leftChildren,
+		})
+		bt.root.children = append(bt.root.children, &node{
+			parent:   bt.root,
+			elements: rights,
+			children: rightChildren,
+		})
 		n.parent = bt.root
 		return
 	} else {
