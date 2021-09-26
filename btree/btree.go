@@ -121,7 +121,6 @@ func (bt *btree) split(n *node) {
 			elements: rights,
 			children: rightChildren,
 		})
-		n.parent = bt.root // TODO: remove?
 		return
 	} else {
 		// Gather left, right, and middle partitions of the current node.
