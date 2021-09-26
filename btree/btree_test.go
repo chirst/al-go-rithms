@@ -444,6 +444,36 @@ func TestInsertDuplicates(t *testing.T) {
 	bt.root.children[1].checkElements(t, 1, 1)
 }
 
+func TestExists(t *testing.T) {
+	degree := 3
+	bt, _ := New(degree, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
+
+	t.Run("exists", func(t *testing.T) {
+		if !bt.Exists(5) {
+			t.Error("expected 5 to exist")
+		}
+		if !bt.Exists(13) {
+			t.Error("expected 13 to exist")
+		}
+	})
+
+	t.Run("not exists", func(t *testing.T) {
+		if bt.Exists(0) {
+			t.Error("did not expect 0 to exist")
+		}
+		if bt.Exists(14) {
+			t.Error("did not expect 14 to exist")
+		}
+	})
+
+	t.Run("empty tree", func(t *testing.T) {
+		et, _ := New(3)
+		if et.Exists(1) {
+			t.Errorf("expected 1 to not exist because the tree is empty")
+		}
+	})
+}
+
 // checkElements asserts a node's elements match exactly the values for elements.
 // order does matter.
 func (n *node) checkElements(t *testing.T, elements ...int) {

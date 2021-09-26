@@ -1,6 +1,10 @@
 // Package btree implements a btree that shouldn't be taken too seriously.
 package btree
 
+// TODO:
+// - implement Delete
+// - smaller functions
+
 import (
 	"errors"
 )
@@ -18,28 +22,64 @@ type node struct {
 	children []*node
 }
 
-// New returns a tree with the given degree. When a node reaches the given
-// degree of elements the node will split.
+// New returns a tree with the given degree.
+//
+// When a node reaches the given degree of elements the node will split.
 //
 // This implementation allows degrees between 3-7 inclusive.
-func New(degree int) (*btree, error) {
+//
+// Given `values` are provided the tree will be populated with the `values`. The
+// complexity of this is O(n log n).
+func New(degree int, values ...int) (*btree, error) {
 	if degree < 3 {
 		return nil, errors.New("tree must not have degree less than 3")
 	}
 	if 7 < degree {
 		return nil, errors.New("tree must not have degree greater than 7")
 	}
-	return &btree{
+	nt := &btree{
 		degree: degree,
-	}, nil
+	}
+	for _, v := range values {
+		nt.Insert(v)
+	}
+	return nt, nil
 }
 
 // Exists checks for the existense of the given `value`.
 //
 // The complexity is O(log n).
 func (bt *btree) Exists(value int) bool {
-	// TODO: implement exists
-	return false
+	if bt.root == nil {
+		return false
+	}
+	return bt.exists(bt.root, value)
+}
+
+func (bt *btree) exists(n *node, value int) bool {
+	// Check if value is in the current node.
+	for _, e := range n.elements {
+		if e == value {
+			return true
+		}
+	}
+	// If the node is a leaf the value does not exist
+	if len(n.children) == 0 {
+		return false
+	}
+	// Recursively search next node
+	var childNode *node
+	for i, el := range n.elements {
+		if el > value {
+			childNode = n.children[i]
+			break
+		}
+		if i == len(n.elements)-1 {
+			childNode = n.children[i+1]
+			break
+		}
+	}
+	return bt.exists(childNode, value)
 }
 
 // Insert inserts an element into the tree.
