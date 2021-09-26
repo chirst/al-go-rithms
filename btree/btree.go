@@ -128,12 +128,12 @@ func (bt *btree) split(n *node) {
 		middleIndex := (len(n.elements) - 1) / 2
 		middleElement := n.elements[middleIndex]
 		leftElements := n.elements[:middleIndex]
-		leftChildren := n.children[:middleIndex-1]
 		rightElements := n.elements[middleIndex+1:]
+		leftChildren := []*node{}
 		rightChildren := []*node{}
-		children := n.children
-		if len(children) != 0 {
+		if len(n.children) != 0 {
 			rightChildren = n.children[middleIndex+1:]
+			leftChildren = n.children[:middleIndex-1]
 		}
 
 		// Remove old parent/child relation.
