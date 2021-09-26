@@ -34,17 +34,20 @@ func New(degree int) (*btree, error) {
 	}, nil
 }
 
-// TODO: implement Exists and document
+// Exists checks for the existense of the given `value`.
+//
+// The complexity is O(log n).
 func (bt *btree) Exists(value int) bool {
+	// TODO: implement exists
 	return false
 }
 
 // TODO: insert duplicate value and document behavior. Likely will skip if the
 // value already exists.
-// TODO: consider making Insert functions smaller.
-// TODO: complexity
 
 // Insert inserts an element into the tree.
+//
+// The complexity is O(log n).
 func (bt *btree) Insert(value int) {
 	// No nodes at all so create a root node.
 	if bt.root == nil {
