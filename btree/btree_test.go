@@ -433,6 +433,17 @@ func TestInsertDegree5(t *testing.T) {
 	})
 }
 
+func TestInsertDuplicates(t *testing.T) {
+	bt, _ := New(3)
+	bt.Insert(1)
+	bt.Insert(1)
+	bt.Insert(1)
+	bt.Insert(1)
+	bt.root.checkElements(t, 1)
+	bt.root.children[0].checkElements(t, 1)
+	bt.root.children[1].checkElements(t, 1, 1)
+}
+
 // checkElements asserts a node's elements match exactly the values for elements.
 // order does matter.
 func (n *node) checkElements(t *testing.T, elements ...int) {

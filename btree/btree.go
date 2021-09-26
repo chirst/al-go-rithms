@@ -42,10 +42,9 @@ func (bt *btree) Exists(value int) bool {
 	return false
 }
 
-// TODO: insert duplicate value and document behavior. Likely will skip if the
-// value already exists.
-
 // Insert inserts an element into the tree.
+//
+// Given the value already exists in the tree, the value will still be inserted.
 //
 // The complexity is O(log n).
 func (bt *btree) Insert(value int) {
