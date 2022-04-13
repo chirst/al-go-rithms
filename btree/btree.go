@@ -2,7 +2,8 @@
 package btree
 
 // TODO:
-// - implement Delete
+// - Implement Delete
+// - Test coverage
 
 import (
 	"errors"
@@ -197,6 +198,19 @@ func (bt *btree) splitInternal(n *node) {
 	}
 }
 
+// addElement adds an element to a leaf node while maintaining ordering of the
+// elements.
+func (n *node) addElement(value int) {
+	for i, e := range n.elements {
+		if value < e {
+			n.elements = append(n.elements[:i+1], n.elements[i:]...)
+			n.elements[i] = value
+			return
+		}
+	}
+	n.elements = append(n.elements, value)
+}
+
 // getChildContaining returns the child node potentially containing the given
 // value.
 func (n *node) getChildContaining(value int) *node {
@@ -206,6 +220,29 @@ func (n *node) getChildContaining(value int) *node {
 		}
 	}
 	return n.children[len(n.children)-1]
+}
+
+// getPartitionedElements splits and returns the middle, left, and right
+// elements of the given node.
+func (n *node) getPartitionedElements() (int, []int, []int) {
+	middleIndex := (len(n.elements) - 1) / 2
+	middle := n.elements[middleIndex]
+	lefts := n.elements[:middleIndex]
+	rights := n.elements[middleIndex+1:]
+	return middle, lefts, rights
+}
+
+// getPartitionedChildren splits and returns the children of the given node
+// into left and right partitions.
+func (n *node) getPartitionedChildren() ([]*node, []*node) {
+	middleIndex := (len(n.elements) - 1) / 2
+	lefts := []*node{}
+	rights := []*node{}
+	if len(n.children) != 0 {
+		lefts = n.children[:middleIndex+1]
+		rights = n.children[middleIndex+1:]
+	}
+	return lefts, rights
 }
 
 // removeChildFromParent removes the relation between the node and it's parent.
@@ -278,40 +315,4 @@ func (n *node) insertSplitInternal(
 	leftParentChildren = append(leftParentChildren, newRight)
 	rightParentChildren := n.parent.children[i:]
 	n.parent.children = append(leftParentChildren, rightParentChildren...)
-}
-
-// getPartitionedElements splits and returns the middle, left, and right
-// elements of the given node.
-func (n *node) getPartitionedElements() (int, []int, []int) {
-	middleIndex := (len(n.elements) - 1) / 2
-	middle := n.elements[middleIndex]
-	lefts := n.elements[:middleIndex]
-	rights := n.elements[middleIndex+1:]
-	return middle, lefts, rights
-}
-
-// getPartitionedChildren splits and returns the children of the given node
-// into left and right partitions.
-func (n *node) getPartitionedChildren() ([]*node, []*node) {
-	middleIndex := (len(n.elements) - 1) / 2
-	lefts := []*node{}
-	rights := []*node{}
-	if len(n.children) != 0 {
-		lefts = n.children[:middleIndex+1]
-		rights = n.children[middleIndex+1:]
-	}
-	return lefts, rights
-}
-
-// addElement adds an element to a leaf node while maintaining ordering of the
-// elements.
-func (n *node) addElement(value int) {
-	for i, e := range n.elements {
-		if value < e {
-			n.elements = append(n.elements[:i+1], n.elements[i:]...)
-			n.elements[i] = value
-			return
-		}
-	}
-	n.elements = append(n.elements, value)
 }
