@@ -444,6 +444,18 @@ func TestInsertDuplicates(t *testing.T) {
 	bt.root.children[1].checkElements(t, 1, 1)
 }
 
+func TestInsertOrder(t *testing.T) {
+	bt, _ := New(7)
+	bt.Insert(6)
+	bt.Insert(4)
+	bt.Insert(2)
+	bt.Insert(5)
+	bt.Insert(1)
+	bt.Insert(3)
+
+	bt.root.checkElements(t, 1, 2, 3, 4, 5, 6)
+}
+
 func TestExists(t *testing.T) {
 	degree := 3
 	bt, _ := New(degree, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
