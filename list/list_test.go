@@ -25,7 +25,7 @@ func TestNew(t *testing.T) {
 func TestLen(t *testing.T) {
 
 	t.Run("prepend", func(t *testing.T) {
-		l := New()
+		l := New[int]()
 
 		checkLen(t, l, 0)
 		l.Prepend(1)
@@ -37,7 +37,7 @@ func TestLen(t *testing.T) {
 	})
 
 	t.Run("append", func(t *testing.T) {
-		l := New()
+		l := New[int]()
 
 		checkLen(t, l, 0)
 		l.Append(1)
@@ -77,14 +77,14 @@ func TestLen(t *testing.T) {
 	})
 }
 
-func checkLen(t *testing.T, l *linkList, expectedLen int) {
+func checkLen(t *testing.T, l *linkList[int], expectedLen int) {
 	if len := l.Len(); len != expectedLen {
 		t.Errorf("expected len to be %v got %v", expectedLen, len)
 	}
 }
 
 func TestPrepend(t *testing.T) {
-	l := New()
+	l := New[int]()
 
 	l.Prepend(1)
 	l.Prepend(2)
@@ -144,7 +144,7 @@ func TestInsert(t *testing.T) {
 }
 
 func TestAppend(t *testing.T) {
-	l := New()
+	l := New[int]()
 
 	l.Append(1)
 	l.Append(2)
@@ -294,16 +294,24 @@ func TestSwap(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	l := New(1, 2, 3)
-	r := l.Get(0)
-	checkEqual(t, r, 1)
-	r = l.Get(1)
-	checkEqual(t, r, 2)
-	r = l.Get(2)
-	checkEqual(t, r, 3)
+	t.Run("populated list", func(t *testing.T) {
+		l := New(1, 2, 3)
+		r := l.Get(0)
+		checkEqual(t, r, 1)
+		r = l.Get(1)
+		checkEqual(t, r, 2)
+		r = l.Get(2)
+		checkEqual(t, r, 3)
+	})
+
+	t.Run("empty list", func(t *testing.T) {
+		l := New[int]()
+		r := l.Get(1)
+		checkNil(t, r)
+	})
 }
 
-func checkNodeValue(t *testing.T, l *linkList, nodeIndex int, wantValue int) {
+func checkNodeValue(t *testing.T, l *linkList[int], nodeIndex int, wantValue int) {
 	n := l.getNode(nodeIndex)
 	if n == nil {
 		t.Errorf("expected node value at index: %v, not to be nil", nodeIndex)
@@ -318,7 +326,7 @@ func checkNodeValue(t *testing.T, l *linkList, nodeIndex int, wantValue int) {
 	}
 }
 
-func checkNodePrev(t *testing.T, l *linkList, nodeIndex int, wantNode *node) {
+func checkNodePrev(t *testing.T, l *linkList[int], nodeIndex int, wantNode *node[int]) {
 	n := l.getNode(nodeIndex)
 	if n == nil {
 		t.Errorf("expected node value at index: %v, not to be nil", nodeIndex)
@@ -333,7 +341,7 @@ func checkNodePrev(t *testing.T, l *linkList, nodeIndex int, wantNode *node) {
 	}
 }
 
-func checkNodeNext(t *testing.T, l *linkList, nodeIndex int, wantNode *node) {
+func checkNodeNext(t *testing.T, l *linkList[int], nodeIndex int, wantNode *node[int]) {
 	n := l.getNode(nodeIndex)
 	if n == nil {
 		t.Errorf("expected node value at index: %v, not to be nil", nodeIndex)
@@ -348,7 +356,7 @@ func checkNodeNext(t *testing.T, l *linkList, nodeIndex int, wantNode *node) {
 	}
 }
 
-func checkNodeNil(t *testing.T, l *linkList, nodeIndex int) {
+func checkNodeNil(t *testing.T, l *linkList[int], nodeIndex int) {
 	n := l.getNode(nodeIndex)
 	if n != nil {
 		t.Errorf("expected node at index: %v to be nil", nodeIndex)
@@ -367,7 +375,7 @@ func checkNil(t *testing.T, v *int) {
 	}
 }
 
-func (ll *linkList) getNode(index int) *node {
+func (ll *linkList[T]) getNode(index int) *node[T] {
 	count := 0
 	currentNode := ll.head
 	for currentNode != nil {

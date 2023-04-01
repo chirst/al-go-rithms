@@ -4,6 +4,7 @@ package btree
 // TODO:
 // - Implement Delete
 // - Test coverage
+// - Generic values
 
 import (
 	"errors"
