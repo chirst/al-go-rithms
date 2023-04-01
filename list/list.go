@@ -1,23 +1,26 @@
 // Package list is a doubly linked list that shouldn't be taken too seriously.
 package list
 
-type linkList struct {
-	head *node
-	tail *node
+// TODO:
+// - Implement Sort
+
+type linkList[T comparable] struct {
+	head *node[T]
+	tail *node[T]
 	len  int
 }
 
-type node struct {
-	prev  *node
-	next  *node
-	value int
+type node[T comparable] struct {
+	prev  *node[T]
+	next  *node[T]
+	value T
 }
 
 // New returns an instance of a list with the given values.
 //
 // The complexity is O(n).
-func New(values ...int) *linkList {
-	l := &linkList{}
+func New[T comparable](values ...T) *linkList[T] {
+	l := &linkList[T]{}
 	for _, v := range values {
 		l.Append(v)
 	}
@@ -27,25 +30,25 @@ func New(values ...int) *linkList {
 // Len returns the count of elements in the list.
 //
 // The complexity is O(1).
-func (ll *linkList) Len() int {
+func (ll *linkList[T]) Len() int {
 	return ll.len
 }
 
 // Prepend creates a new element at the beginning of the list.
 //
 // The complexity is O(1).
-func (ll *linkList) Prepend(value int) {
+func (ll *linkList[T]) Prepend(value T) {
 	ll.len++
 	if ll.head != nil {
 		oldHead := ll.head
-		ll.head = &node{
+		ll.head = &node[T]{
 			next:  oldHead,
 			value: value,
 		}
 		ll.head.next.prev = ll.head
 		return
 	}
-	ll.head = &node{
+	ll.head = &node[T]{
 		value: value,
 	}
 	ll.tail = ll.head
@@ -62,7 +65,7 @@ func (ll *linkList) Prepend(value int) {
 //	- given [1, 2, 3] Insert(1, 4) = [1, 4, 2, 3].
 //	- given [1, 2, 3] Insert(2, 4) = [1, 2, 4, 3].
 //	- given [1, 2, 3] Insert(3, 4) = [1, 2, 3, 4].
-func (ll *linkList) Insert(index, value int) {
+func (ll *linkList[T]) Insert(index int, value T) {
 	if index == 0 {
 		ll.Prepend(value)
 		return
@@ -77,7 +80,7 @@ func (ll *linkList) Insert(index, value int) {
 	for currentNode != nil {
 		if currentIndex == index {
 			next := currentNode.next
-			nn := &node{
+			nn := &node[T]{
 				prev:  currentNode,
 				next:  next,
 				value: value,
@@ -94,16 +97,16 @@ func (ll *linkList) Insert(index, value int) {
 // Append adds a new element to the end of the list.
 //
 // The complexity is O(1).
-func (ll *linkList) Append(value int) {
+func (ll *linkList[T]) Append(value T) {
 	ll.len++
 	if ll.head == nil {
-		ll.head = &node{
+		ll.head = &node[T]{
 			value: value,
 		}
 		ll.tail = ll.head
 		return
 	}
-	ll.tail.next = &node{
+	ll.tail.next = &node[T]{
 		prev:  ll.tail,
 		value: value,
 	}
@@ -115,7 +118,7 @@ func (ll *linkList) Append(value int) {
 // Returns the value of the removed element or nil if the list is empty.
 //
 // The complexity is O(1).
-func (ll *linkList) Shift() *int {
+func (ll *linkList[T]) Shift() *T {
 	if ll.head == nil {
 		return nil
 	}
@@ -138,7 +141,7 @@ func (ll *linkList) Shift() *int {
 // Returns the value of the removed element or nil if nothing is removed.
 //
 // The complexity is O(n).
-func (ll *linkList) Remove(index int) *int {
+func (ll *linkList[T]) Remove(index int) *T {
 	if index == 0 {
 		return ll.Shift()
 	}
@@ -167,7 +170,7 @@ func (ll *linkList) Remove(index int) *int {
 // Returns the value of the removed element or nil if the list is empty.
 //
 // The complexity is O(1).
-func (ll *linkList) Pop() *int {
+func (ll *linkList[T]) Pop() *T {
 	if ll.head == nil {
 		return nil
 	}
@@ -190,11 +193,11 @@ func (ll *linkList) Pop() *int {
 // Note this swaps values, but not references.
 //
 // The complexity is O(n).
-func (ll *linkList) Swap(indexA, indexB int) {
+func (ll *linkList[T]) Swap(indexA, indexB int) {
 	currentNode := ll.head
 	currentIndex := 0
-	var nodeA *node
-	var nodeB *node
+	var nodeA *node[T]
+	var nodeB *node[T]
 	for currentNode != nil {
 		if currentIndex == indexA {
 			nodeA = currentNode
@@ -217,7 +220,7 @@ func (ll *linkList) Swap(indexA, indexB int) {
 // element matches the given index, nil is returned.
 //
 // The complexity is O(n)
-func (ll *linkList) Get(index int) *int {
+func (ll *linkList[T]) Get(index int) *T {
 	count := 0
 	currentNode := ll.head
 	for currentNode != nil {
